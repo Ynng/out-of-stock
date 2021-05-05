@@ -1,7 +1,10 @@
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
+import Discord from 'discord.js';
 
 if (!globalThis.fetch) globalThis.fetch = fetch;
+
+const client = new Discord.WebhookClient(id, token);
 
 let main = async () => {
   fetch("https://droptracker.ca/showstock.php")
@@ -11,8 +14,9 @@ let main = async () => {
     })
     .then((text) => {
       var $ = cheerio.load(text);
-      $(".table > tbody > tr > td:nth-child(1)").each((index,element) => {
-        console.log(`${index}: ${$(element).text().trim()}`)
+      $(".table > tbody > tr").each((index,element) => {
+        let entry = $(element).text().trim().split("\n").map((original)=>{return original.trim()})
+        console.log(entry);
       })
       // console.log($("tr")[0].children[0]);
     })
